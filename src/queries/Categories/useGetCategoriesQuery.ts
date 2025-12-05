@@ -4,7 +4,7 @@ import { getCategories } from "@/apiClients/CategoriesClient";
 
 export const useGetCategoriesQuery = () => {
     const { data, isLoading, isFetching, error } =
-        useQuery<useGetCategoriesQueryResponseSuccess>({
+        useQuery<useGetCategoriesQueryResponseSuccess[]>({
             queryKey: ["categories"],
             queryFn: () => getCategories(),
         });

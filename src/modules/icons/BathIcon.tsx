@@ -1,0 +1,16 @@
+const BathIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 14 12"
+        className="block w-4"
+        aria-hidden="true"
+    >
+        <path
+            fillRule="evenodd"
+            fill="#6d6e70"
+            d="M1.7 10h10.6V6.7H1.7V10zM13 5.3H3v-3A1 1 0 1 1 5 2h-.7v1.3H7V2h-.7a2.3 2.3 0 0 0-4.6.3v3H1L.3 6v4.7l.7.6h.7v.7H3v-.7h8v.7h1.3v-.7h.7l.7-.6V6l-.7-.7z"
+        />
+    </svg>
+)
+
+export default BathIcon

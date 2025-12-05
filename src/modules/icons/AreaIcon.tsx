@@ -1,0 +1,16 @@
+const AreaIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        className="block w-4"
+        aria-hidden="true"
+    >
+        <path
+            fillRule="evenodd"
+            fill="#6d6e70"
+            d="M3 3L2 4v16l1 1h18l1-1V4l-1-1H3zm8 10v6H4v-6h7zm0-8v6H4V5h7zm9 8v6h-7v-6h7zm0-8v6h-7V5h7z"
+        />
+    </svg>
+)
+
+export default AreaIcon

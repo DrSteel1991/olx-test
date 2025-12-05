@@ -7,7 +7,7 @@ export type Statistics = {
     activeCount: number;
 };
 
-export type Category = {
+export type useGetCategoriesQueryResponseSuccess = {
     id: number;
     name: string;
     name_l1: string;
@@ -24,7 +24,5 @@ export type Category = {
     paaSections: unknown | null;
     templateConfigs: unknown | null;
     templateHashes: unknown | null;
-    children: Category[];
+    children: useGetCategoriesQueryResponseSuccess[];
 };
-
-export type useGetCategoriesQueryResponseSuccess = Category[];

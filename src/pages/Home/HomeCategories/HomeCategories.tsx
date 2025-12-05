@@ -1,9 +1,14 @@
-import { useGetCategoriesQuery } from "@/queries/Categories/useGetCategoriesQuery"
 import Section from "@/ui/Section"
 import { useTranslation } from "react-i18next"
+import HomeCategory from "./HomeCategory"
+import type { useGetCategoriesQueryResponseSuccess } from "@/queries/Categories/types"
 
-const HomeCategories = () => {
-    const { data: categories } = useGetCategoriesQuery()
+interface Props {
+    categories: useGetCategoriesQueryResponseSuccess[] | undefined
+}
+
+const HomeCategories = ({ categories }: Props) => {
+
     const { t, i18n } = useTranslation("home")
 
     return (
@@ -21,21 +26,7 @@ const HomeCategories = () => {
                         : category.name
 
                     return (
-                        <div
-                            key={category.id}
-                            className="flex w-34 flex-col items-center gap-3"
-                        >
-                            <img
-                                className="h-23 w-23"
-                                src={`/assets/images/categories/${category.slug}.png`}
-                                alt={displayName}
-                            />
-                            <div className="flex flex-col items-center">
-                                <span className="text-center text-sm font-semibold leading-tight">
-                                    {displayName}
-                                </span>
-                            </div>
-                        </div>
+                        <HomeCategory key={category.id} slug={category.slug} displayName={displayName} />
                     )
                 })}
             </div>
