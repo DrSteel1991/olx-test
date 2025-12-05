@@ -1,14 +1,14 @@
-import Section from "@/ui/Section"
 import HomeHeader from "./HomeHeader"
 import Separator from "@/ui/Separator"
 import HomeCategories from "./HomeCategories/HomeCategories"
+import { initHomeI18n } from "./i18n"
+
+initHomeI18n()
 
 const Home = () => {
     return (
         <>
-            <Section>
-                <HomeHeader />
-            </Section>
+            <HomeHeader />
             <Separator />
             <HomeCategories />
         </>
