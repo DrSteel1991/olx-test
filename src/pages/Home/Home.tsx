@@ -1,6 +1,7 @@
 import Section from "@/ui/Section"
 import HomeHeader from "./HomeHeader"
 import Separator from "@/ui/Separator"
+import HomeCategories from "./HomeCategories/HomeCategories"
 
 const Home = () => {
     return (
@@ -9,6 +10,7 @@ const Home = () => {
                 <HomeHeader />
             </Section>
             <Separator />
+            <HomeCategories />
         </>
     )
 }
