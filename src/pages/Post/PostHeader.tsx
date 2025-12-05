@@ -1,26 +1,16 @@
-import { useTranslation } from "react-i18next"
-import Section from "@/ui/Section"
-import Button from "@/ui/Button"
+import Icon from "@/ui/Icon/Icon"
 import { useNavigate } from "react-router-dom"
 
-const HomeHeader = () => {
-    const { i18n, t } = useTranslation("home")
+const PostHeader = () => {
+
     const navigate = useNavigate()
-
-    const isArabic = i18n.language === "ar"
-
-    const toggleLanguage = () => {
-        i18n.changeLanguage(isArabic ? "en" : "ar")
-    }
-
-
-    const handleSellClick = () => {
-        navigate("/post")
-    }
-
     return (
-        <Section>
-            <div className="flex w-full items-center justify-between">
+
+        <div className=" w-full border-b border-gray-200 pb-4 bg-[#f7f8f8] pl-4 pt-4">
+            <div className="flex items-center gap-1">
+                <button type="button" onClick={() => navigate(-1)}>
+                    <Icon name="KeyboardBackspace" fontSize="large" />
+                </button>
                 <div className="flex w-full items-center gap-4">
                     <svg
                         className="h-8 w-auto"
@@ -34,21 +24,9 @@ const HomeHeader = () => {
                         />
                     </svg>
                 </div>
-                <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        onClick={toggleLanguage}
-                        className="px-4 py-1 text-sm font-medium cursor-pointer"
-                    >
-                        {isArabic ? "English" : "العربية"}
-                    </button>
-                    <Button label={t("categories.sell")} iconName="add" onClick={handleSellClick} />
-                </div>
             </div>
-        </Section>
+        </div>
     )
 }
 
-export default HomeHeader
-
-
+export default PostHeader
