@@ -1,4 +1,3 @@
-import Section from "@/ui/Section"
 import { useGetCategoriesQuery } from "@/queries/Categories/useGetCategoriesQuery"
 import { useTranslation } from "react-i18next"
 import { initPostI18n } from "./i18n"
@@ -9,6 +8,7 @@ import PostListView from "./PostListView/PostListView"
 import { useNavigate } from "react-router-dom"
 import { usePrefetchCategoryFields } from "@/queries/CategoryFields/useGetCategoryFieldsQuery"
 import PostCategoriesSkeleton from "./PostCategoriesSkeleton"
+import PostHeader from "./PostHeader"
 
 initPostI18n()
 
@@ -16,7 +16,7 @@ const Post = () => {
     const [showListView, setShowListView] = useState(false)
     const [selectedPath, setSelectedPath] = useState<number[]>([])
     const { data: categories, isLoading, isFetching } = useGetCategoriesQuery()
-    const { t, i18n } = useTranslation("post")
+    const { i18n } = useTranslation("post")
     const navigate = useNavigate()
     const { prefetchCategoryFields } = usePrefetchCategoryFields()
 
@@ -47,17 +47,7 @@ const Post = () => {
     return (
         <>
             <Header />
-            <Section>
-                <div className="mb-3 mt-6 flex flex-col gap-5">
-                    <span className="text-3xl font-bold text-gray-900">
-                        {t("title")}
-                    </span>
-                    <span className="text-base font-bold text-gray-800">
-                        {t("subtitle")}
-                    </span>
-                </div>
-            </Section>
-
+            <PostHeader />
             {isLoadingCategories ? (
                 <PostCategoriesSkeleton />
             ) : !showListView ? (
