@@ -1,4 +1,4 @@
-import type { Control, FormState, UseFormHandleSubmit } from "react-hook-form"
+import type { Control, UseFormHandleSubmit } from "react-hook-form"
 import PostFormCategorychangeField from "./PostFormCategoryChangeField"
 import PostFormFieldRow from "./PostFormFieldRow"
 import PostFormContactSection from "./PostFormContactSection"
@@ -13,7 +13,6 @@ interface Props {
     parentImageSrc?: string
     steps: Record<string, FieldDefinition[]>
     control: Control<FormValues>
-    formState: FormState<FormValues>
     labelAlign: string
     isRtl: boolean
     handleSubmit: UseFormHandleSubmit<FormValues>
@@ -27,7 +26,6 @@ const PostFormBody = ({
     parentImageSrc,
     steps,
     control,
-    formState,
     labelAlign,
     isRtl,
     handleSubmit,
@@ -63,7 +61,6 @@ const PostFormBody = ({
                                     key={field.id}
                                     field={field}
                                     control={control}
-                                    formState={formState}
                                     labelAlign={labelAlign}
                                     isArabic={isRtl}
                                     renderFieldInput={renderFieldInput}
@@ -75,7 +72,6 @@ const PostFormBody = ({
 
             <PostFormContactSection
                 control={control}
-                formState={formState}
                 labelAlign={labelAlign}
             />
         </form>

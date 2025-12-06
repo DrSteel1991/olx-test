@@ -1,7 +1,7 @@
 import {
     Controller,
+    useFormState,
     type Control,
-    type FormState,
 } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import TextOrNumberField from "@/ui/form/TextOrNumberField"
@@ -13,16 +13,12 @@ type FormValues = Record<string, unknown>
 
 interface Props {
     control: Control<FormValues>
-    formState: FormState<FormValues>
     labelAlign: string
 }
 
-const PostFormContactSection = ({
-    control,
-    formState,
-    labelAlign,
-}: Props) => {
+const PostFormContactSection = ({ control, labelAlign }: Props) => {
     const { t } = useTranslation("postForm")
+    const { isSubmitted } = useFormState({ control })
 
     const contactMethodOptions: EnumChipOption[] = [
         {
@@ -54,7 +50,7 @@ const PostFormContactSection = ({
                 render={({ field, fieldState }) => {
                     const showError =
                         !!fieldState.error &&
-                        (fieldState.isTouched || formState.isSubmitted)
+                        (fieldState.isTouched || isSubmitted)
 
                     return (
                         <div className="flex items-start justify-between gap-6">
@@ -103,7 +99,7 @@ const PostFormContactSection = ({
                 render={({ field, fieldState }) => {
                     const showError =
                         !!fieldState.error &&
-                        (fieldState.isTouched || formState.isSubmitted)
+                        (fieldState.isTouched || isSubmitted)
 
                     return (
                         <div className="flex items-start justify-between gap-6">
@@ -155,7 +151,7 @@ const PostFormContactSection = ({
                 render={({ field, fieldState }) => {
                     const showError =
                         !!fieldState.error &&
-                        (fieldState.isTouched || formState.isSubmitted)
+                        (fieldState.isTouched || isSubmitted)
 
                     const valueArray = Array.isArray(field.value)
                         ? (field.value as Array<string | number>)

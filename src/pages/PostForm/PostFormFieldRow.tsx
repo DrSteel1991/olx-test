@@ -1,8 +1,8 @@
 import {
     Controller,
+    useFormState,
     type Control,
     type ControllerRenderProps,
-    type FormState,
 } from "react-hook-form"
 import type { TFunction } from "i18next"
 import type { FieldDefinition } from "./functions/buildValidationSchema"
@@ -14,7 +14,6 @@ type FormValues = Record<string, unknown>
 interface Props {
     field: FieldDefinition
     control: Control<FormValues>
-    formState: FormState<FormValues>
     labelAlign: string
     isArabic: boolean
     renderFieldInput: (params: {
@@ -29,12 +28,12 @@ interface Props {
 const PostFormFieldRow = ({
     field,
     control,
-    formState,
     labelAlign,
     isArabic,
     renderFieldInput,
 }: Props) => {
     const { t } = useTranslation("postForm")
+    const { isSubmitted } = useFormState({ control })
     return (
         <Controller
             control={control}
@@ -42,7 +41,7 @@ const PostFormFieldRow = ({
             render={({ field: rhfField, fieldState }) => {
                 const showError =
                     !!fieldState.error &&
-                    (fieldState.isTouched || formState.isSubmitted)
+                    (fieldState.isTouched || isSubmitted)
 
                 const defaultLabel = isArabic
                     ? field.seoTitle?.ar || field.name

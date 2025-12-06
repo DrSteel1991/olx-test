@@ -75,7 +75,7 @@ const PostForm = () => {
         mode: "onBlur",
     })
 
-    const { control, handleSubmit, formState } = form
+    const { control, handleSubmit } = form
 
     const onSubmit = (data: FormValues) => {
         console.log("Post form submit", data)
@@ -121,7 +121,6 @@ const PostForm = () => {
                     parentImageSrc={parentImageSrc}
                     steps={steps}
                     control={control}
-                    formState={formState}
                     labelAlign={labelAlign}
                     isRtl={isRtl}
                     handleSubmit={handleSubmit}
