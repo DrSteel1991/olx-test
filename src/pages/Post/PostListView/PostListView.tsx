@@ -8,6 +8,10 @@ interface Props {
     isArabic: boolean
     selectedPath: number[]
     handleSelectInColumn: (level: number, id: number) => void
+    onLeafCategorySelected: (
+        categoryExternalID: string,
+        categoryId: number,
+    ) => void
 }
 
 const PostListView = ({
@@ -15,6 +19,7 @@ const PostListView = ({
     isArabic,
     selectedPath,
     handleSelectInColumn,
+    onLeafCategorySelected,
 }: Props) => {
     const rootCategories =
         categories?.filter((category) => category.parentID === null) ?? []
@@ -39,6 +44,7 @@ const PostListView = ({
                     hasImage={true}
                     level={0}
                     handleSelectInColumn={handleSelectInColumn}
+                    onLeafCategorySelected={onLeafCategorySelected}
                 />
                 <PostListViewColumn
                     categories={level1Children}
@@ -47,6 +53,7 @@ const PostListView = ({
                     hasImage={false}
                     level={1}
                     handleSelectInColumn={handleSelectInColumn}
+                    onLeafCategorySelected={onLeafCategorySelected}
                 />
                 <PostListViewColumn
                     categories={level2Children}
@@ -55,6 +62,7 @@ const PostListView = ({
                     hasImage={false}
                     level={2}
                     handleSelectInColumn={handleSelectInColumn}
+                    onLeafCategorySelected={onLeafCategorySelected}
                 />
             </div>
         </Section>

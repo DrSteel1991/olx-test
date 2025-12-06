@@ -6,16 +6,18 @@ import PostHeader from "./PostHeader"
 import { useState } from "react"
 import PostCardView from "./PostCardView"
 import PostListView from "./PostListView/PostListView"
+import { useNavigate } from "react-router-dom"
+import { usePrefetchCategoryFields } from "@/queries/CategoryFields/useGetCategoryFieldsQuery"
 
 initPostI18n()
-
-
 
 const Post = () => {
     const [showListView, setShowListView] = useState(false)
     const [selectedPath, setSelectedPath] = useState<number[]>([])
     const { data: categories } = useGetCategoriesQuery()
     const { t, i18n } = useTranslation("post")
+    const navigate = useNavigate()
+    const { prefetchCategoryFields } = usePrefetchCategoryFields()
 
     const isArabic = i18n.language === "ar"
 
@@ -30,6 +32,14 @@ const Post = () => {
             next[level] = id
             return next
         })
+    }
+
+    const handleLeafCategorySelected = async (
+        categoryExternalID: string,
+        categoryId: number,
+    ) => {
+        await prefetchCategoryFields(categoryExternalID, categoryId)
+        navigate("/post-form")
     }
 
     return (
@@ -59,6 +69,7 @@ const Post = () => {
                     isArabic={isArabic}
                     selectedPath={selectedPath}
                     handleSelectInColumn={handleSelectInColumn}
+                    onLeafCategorySelected={handleLeafCategorySelected}
                 />
             )}
         </>

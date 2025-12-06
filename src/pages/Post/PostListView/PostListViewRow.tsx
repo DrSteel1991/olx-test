@@ -6,16 +6,34 @@ interface Props {
     onClick?: () => void
     hasChildren?: boolean
     isSelected?: boolean
+    onLeafClick?: () => void
 }
 
-const PostListViewRow = ({ label, iconSrc, onClick, hasChildren, isSelected }: Props) => {
+const PostListViewRow = ({
+    label,
+    iconSrc,
+    onClick,
+    hasChildren,
+    isSelected,
+    onLeafClick,
+}: Props) => {
+    const handleClick = () => {
+        if (hasChildren) {
+            onClick?.()
+            return
+        }
+
+        onLeafClick?.()
+    }
+
     const baseClasses =
         "flex items-center justify-between border-b border-gray-200 px-6 py-3 text-left hover:bg-[#e9fbff]"
     const selectedClasses = isSelected ? " bg-[#e9fbff]" : ""
+
     return (
         <button
             type="button"
-            onClick={onClick}
+            onClick={handleClick}
             className={baseClasses + selectedClasses}
         >
             <div className="flex items-center gap-3">
