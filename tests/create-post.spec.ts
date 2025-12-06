@@ -45,8 +45,6 @@ const categoriesResponse = [
 test('user can create a post from home through to post form submit', async ({
   page,
 }) => {
-  // Use mocked categories so the category tree is deterministic,
-  // but let the real /categoryFields API drive the dynamic form.
   await page.route('**/api/categories', async (route) => {
     await route.fulfill({
       status: 200,

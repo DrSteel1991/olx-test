@@ -47,7 +47,6 @@ describe("HomeCategories", () => {
 
         render(<HomeCategories categories={categories} />)
 
-        // Default language is "en"
         expect(screen.getByText("Cars")).toBeInTheDocument()
         expect(screen.getByText("Mobile Phones")).toBeInTheDocument()
     })
