@@ -1,36 +1,74 @@
 import type { useGetCategoryFieldsQueryResponseSuccess } from "@/queries/CategoryFields/types"
+import type { useGetCategoriesQueryResponseSuccess } from "@/queries/Categories/types"
 import {
     CATEGORY_FIELDS_QUERY_KEY,
     CURRENT_CATEGORY_EXTERNAL_ID_KEY,
     CURRENT_CATEGORY_ID_KEY,
+    usePrefetchCategoryFields,
 } from "@/queries/CategoryFields/useGetCategoryFieldsQuery"
 import { useQueryClient } from "@tanstack/react-query"
-import { splitIntoSteps } from "./functions/splitIntoSteps"
 import Section from "@/ui/Section"
 import { useTranslation } from "react-i18next"
-import EnumSelectField, {
-    type EnumOption,
-} from "@/ui/form/EnumSelectField"
-import EnumMultipleChipsField, {
-    type EnumChipOption,
-} from "@/ui/form/EnumMultipleChipsField"
-import TextOrNumberField from "@/ui/form/TextOrNumberField"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useForm, Controller, type ControllerRenderProps } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import {
-    buildValidationSchema,
-    type FieldDefinition,
-} from "./functions/buildValidationSchema"
+import { buildValidationSchema } from "./functions/buildValidationSchema"
 import { initPostFormI18n } from "./i18n"
+import { useGetCategoriesQuery } from "@/queries/Categories/useGetCategoriesQuery"
+import CategorySelectDialog from "./PostFormCategorySelectDialog"
+import PostFormCategoryHeader from "./PostFormCategoryHeader"
+import { renderFieldInput } from "./functions/renderFieldInput"
+import PostFormFieldRow from "./PostFormFieldRow"
+import { useGetSteps } from "./hooks/useGetSteps"
 
 initPostFormI18n()
+
+const flattenCategories = (
+    categories: useGetCategoriesQueryResponseSuccess[] | undefined,
+): useGetCategoriesQueryResponseSuccess[] => {
+    if (!categories) return []
+    const result: useGetCategoriesQueryResponseSuccess[] = []
+    const stack = [...categories]
+
+    while (stack.length) {
+        const cat = stack.pop()!
+        result.push(cat)
+        if (cat.children && cat.children.length) {
+            stack.push(...cat.children)
+        }
+    }
+
+    return result
+}
+
+const getCategoryPathById = (
+    categories: useGetCategoriesQueryResponseSuccess[] | undefined,
+    id: number | undefined,
+): useGetCategoriesQueryResponseSuccess[] => {
+    if (!categories || id === undefined) return []
+    const flat = flattenCategories(categories)
+    const byId = new Map(flat.map((cat) => [cat.id, cat]))
+
+    const path: useGetCategoriesQueryResponseSuccess[] = []
+    let current = byId.get(id) || null
+
+    while (current) {
+        path.push(current)
+        if (current.parentID === null) break
+        current = byId.get(current.parentID) || null
+    }
+
+    return path.reverse()
+}
 
 const PostForm = () => {
     const { i18n, t } = useTranslation("postForm")
     const queryClient = useQueryClient()
     const navigate = useNavigate()
+    const { data: categories } = useGetCategoriesQuery()
+    const { prefetchCategoryFields } = usePrefetchCategoryFields()
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
     const currentCategoryExternalID = queryClient.getQueryData<string>([
         CURRENT_CATEGORY_EXTERNAL_ID_KEY,
     ])
@@ -44,6 +82,7 @@ const PostForm = () => {
             navigate("/post", { replace: true })
         }
     }, [currentCategoryExternalID, currentCategoryId, navigate])
+
     let categoryFields: useGetCategoryFieldsQueryResponseSuccess | undefined
     if (currentCategoryExternalID) {
         categoryFields = queryClient.getQueryData<useGetCategoryFieldsQueryResponseSuccess>([
@@ -52,16 +91,10 @@ const PostForm = () => {
         ])
     }
 
-    const currentCategoryKey =
-        currentCategoryId !== undefined ? String(currentCategoryId) : undefined
-
-    const currentCategoryConfig = currentCategoryKey
-        ? categoryFields?.[currentCategoryKey]
-        : undefined
-
-    const steps = splitIntoSteps(currentCategoryConfig?.flatFields)
-
-    const allVisibleFields: FieldDefinition[] = Object.values(steps).flat()
+    const { steps, allVisibleFields } = useGetSteps(
+        categoryFields,
+        currentCategoryId,
+    )
 
     const validationSchema = buildValidationSchema(allVisibleFields, {
         required: t("errors.required"),
@@ -81,128 +114,38 @@ const PostForm = () => {
         console.log("Post form submit", data)
     }
 
-    const renderFieldInput = (
-        field: FieldDefinition,
-        rhfField: ControllerRenderProps<Record<string, unknown>, string>,
-        hasError: boolean,
+    const handleCategorySelected = async (
+        categoryExternalID: string,
+        categoryId: number,
     ) => {
-        if (field.valueType === "enum" || field.valueType === "enum_multiple") {
-            const enumField = field as Extract<
-                FieldDefinition,
-                { valueType: "enum" | "enum_multiple" }
-            >
-            const rawChoices = enumField.choices
-
-            const rawOptions = !rawChoices
-                ? []
-                : Array.isArray(rawChoices)
-                    ? rawChoices
-                    : Object.values(rawChoices).flat()
-
-            const isArabic = i18n.language === "ar"
-
-            const options: EnumOption[] = rawOptions.map((choice) => ({
-                id: choice.id,
-                label: isArabic
-                    ? choice.label_l1 || choice.seoSlug?.ar || choice.label
-                    : choice.label,
-            }))
-
-            if (
-                field.valueType === "enum" &&
-                field.filterType === "multiple_choice" &&
-                options.length <= 3
-            ) {
-                const chipOptions: EnumChipOption[] = options.map((option) => ({
-                    id: option.id,
-                    label: option.label,
-                }))
-
-                return (
-                    <EnumMultipleChipsField
-                        options={chipOptions}
-                        mode="single"
-                        value={
-                            Array.isArray(rhfField.value)
-                                ? (rhfField.value as Array<string | number>)
-                                : []
-                        }
-                        onChange={rhfField.onChange}
-                        hasError={hasError}
-                    />
-                )
-            }
-
-            if (field.valueType === "enum") {
-                const currentArray = Array.isArray(rhfField.value)
-                    ? (rhfField.value as Array<string | number>)
-                    : rhfField.value == null
-                        ? []
-                        : [rhfField.value as string | number]
-
-                const selectedValue =
-                    currentArray.length > 0 ? currentArray[0] : null
-
-                const placeholder = t(
-                    `fields.${field.attribute}.placeholder`,
-                    { defaultValue: field.name },
-                )
-
-                return (
-                    <EnumSelectField
-                        options={options}
-                        placeholder={placeholder}
-                        value={selectedValue}
-                        onChange={(val) => {
-                            const nextArray =
-                                val == null ? [] : [val as string | number]
-                            rhfField.onChange(nextArray)
-                        }}
-                        hasError={hasError}
-                    />
-                )
-            }
-
-            const chipOptions: EnumChipOption[] = options.map((option) => ({
-                id: option.id,
-                label: option.label,
-            }))
-
-            return (
-                <EnumMultipleChipsField
-                    options={chipOptions}
-                    mode="multiple"
-                    value={
-                        Array.isArray(rhfField.value)
-                            ? (rhfField.value as Array<string | number>)
-                            : []
-                    }
-                    onChange={rhfField.onChange}
-                    hasError={hasError}
-                />
-            )
-        }
-
-        const inputType = field.valueType === "string" ? "text" : "number"
-
-        const placeholder = t(
-            `fields.${field.attribute}.placeholder`,
-            { defaultValue: field.name },
-        )
-
-        return (
-            <TextOrNumberField
-                type={inputType}
-                placeholder={placeholder}
-                value={rhfField.value as string | number | undefined}
-                onChange={rhfField.onChange}
-                hasError={hasError}
-            />
-        )
+        await prefetchCategoryFields(categoryExternalID, categoryId)
+        setIsCategoryModalOpen(false)
+        navigate("/post-form", { replace: true })
     }
 
     const isRtl = i18n.language === "ar"
     const labelAlign = isRtl ? "text-right" : "text-left"
+
+    const categoryPath = getCategoryPathById(categories, currentCategoryId)
+    const parentCategory = categoryPath[0]
+    const leafCategory =
+        categoryPath[categoryPath.length - 1] || parentCategory
+
+    const parentName = parentCategory
+        ? isRtl
+            ? parentCategory.name_l1
+            : parentCategory.name
+        : ""
+
+    const leafName = leafCategory
+        ? isRtl
+            ? leafCategory.name_l1
+            : leafCategory.name
+        : ""
+
+    const parentImageSrc = parentCategory
+        ? `/assets/images/categories/${parentCategory.slug}.png`
+        : undefined
 
     return (
         <Section>
@@ -211,6 +154,13 @@ const PostForm = () => {
                 className="rounded-xl border border-gray-200 bg-white px-8 py-6"
                 noValidate
             >
+                <PostFormCategoryHeader
+                    parentName={parentName}
+                    leafName={leafName}
+                    parentImageSrc={parentImageSrc}
+                    onChangeClick={() => setIsCategoryModalOpen(true)}
+                />
+
                 <div className="flex flex-col gap-6">
                     {Object.entries(steps)
                         .sort(
@@ -223,52 +173,14 @@ const PostForm = () => {
                                 className="flex flex-col gap-4"
                             >
                                 {fields.map((field) => (
-                                    <Controller
+                                    <PostFormFieldRow
                                         key={field.id}
+                                        field={field}
                                         control={control}
-                                        name={field.attribute}
-                                        render={({ field: rhfField, fieldState }) => {
-                                            const showError =
-                                                !!fieldState.error &&
-                                                (fieldState.isTouched ||
-                                                    formState.isSubmitted)
-
-                                            return (
-                                                <div className="flex items-start justify-between gap-6">
-                                                    <div
-                                                        className={`w-40 shrink-0 text-sm font-semibold ${showError
-                                                            ? "text-red-500"
-                                                            : "text-gray-800"
-                                                            } ${labelAlign}`}
-                                                    >
-                                                        <span>
-                                                            {t(
-                                                                `fields.${field.attribute}.label`,
-                                                                { defaultValue: field.name },
-                                                            )}
-                                                        </span>
-                                                        {field.isMandatory && (
-                                                            <span className="ml-1 text-red-500">
-                                                                *
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        {renderFieldInput(
-                                                            field,
-                                                            rhfField,
-                                                            showError,
-                                                        )}
-                                                        {showError &&
-                                                            fieldState.error?.message && (
-                                                                <p className="mt-1 text-xs text-red-500">
-                                                                    {fieldState.error.message}
-                                                                </p>
-                                                            )}
-                                                    </div>
-                                                </div>
-                                            )
-                                        }}
+                                        formState={formState}
+                                        labelAlign={labelAlign}
+                                        isArabic={isRtl}
+                                        renderFieldInput={renderFieldInput}
                                     />
                                 ))}
                             </div>
@@ -285,6 +197,14 @@ const PostForm = () => {
                     {t("actions.submit")}
                 </button>
             </div>
+
+            <CategorySelectDialog
+                open={isCategoryModalOpen}
+                onClose={() => setIsCategoryModalOpen(false)}
+                onCategorySelected={handleCategorySelected}
+                categories={categories}
+                isArabic={isRtl}
+            />
         </Section>
     )
 }

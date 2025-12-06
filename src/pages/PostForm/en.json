@@ -6,6 +6,11 @@
     "required": "This field is required",
     "number": "Must be a number"
   },
+  "category": {
+    "label": "Category",
+    "change": "Change",
+    "modalTitle": "Choose a category"
+  },
   "fields": {
     "brand": {
       "label": "Brand",

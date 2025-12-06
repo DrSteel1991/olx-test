@@ -6,6 +6,11 @@
     "required": "هذا الحقل مطلوب",
     "number": "يجب أن يكون رقماً"
   },
+  "category": {
+    "label": "الفئة",
+    "change": "تغيير",
+    "modalTitle": "اختر الفئة"
+  },
   "fields": {
     "brand": {
       "label": "الماركة",

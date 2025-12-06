@@ -1,6 +1,6 @@
 type ValueType = "enum" | "enum_multiple" | "float" | "int" | "string"
 
-interface EnumChoice {
+export interface EnumChoice {
     value: string
     label: string
     label_l1?: string
