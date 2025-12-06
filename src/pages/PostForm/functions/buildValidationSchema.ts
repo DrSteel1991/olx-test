@@ -3,7 +3,15 @@ import type { CategoryFieldConfig } from "@/queries/CategoryFields/types"
 
 export type FieldDefinition = CategoryFieldConfig["flatFields"][number]
 
-export const buildValidationSchema = (fields: FieldDefinition[]) => {
+interface Messages {
+    required: string
+    number: string
+}
+
+export const buildValidationSchema = (
+    fields: FieldDefinition[],
+    messages: Messages,
+) => {
     const shape: Record<string, yup.AnySchema> = {}
 
     for (const field of fields) {
@@ -17,7 +25,7 @@ export const buildValidationSchema = (fields: FieldDefinition[]) => {
             case "int":
                 schema = yup
                     .number()
-                    .typeError("Must be a number")
+                    .typeError(messages.number)
                 break
             case "enum":
                 if (field.filterType === "multiple_choice") {
@@ -34,7 +42,7 @@ export const buildValidationSchema = (fields: FieldDefinition[]) => {
         }
 
         if (field.isMandatory) {
-            schema = schema.required("Required")
+            schema = schema.required(messages.required)
         }
 
         shape[field.attribute] = schema

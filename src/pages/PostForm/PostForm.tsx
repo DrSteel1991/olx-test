@@ -23,9 +23,12 @@ import {
     buildValidationSchema,
     type FieldDefinition,
 } from "./functions/buildValidationSchema"
+import { initPostFormI18n } from "./i18n"
+
+initPostFormI18n()
 
 const PostForm = () => {
-    const { i18n } = useTranslation()
+    const { i18n, t } = useTranslation("postForm")
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     const currentCategoryExternalID = queryClient.getQueryData<string>([
@@ -60,7 +63,10 @@ const PostForm = () => {
 
     const allVisibleFields: FieldDefinition[] = Object.values(steps).flat()
 
-    const validationSchema = buildValidationSchema(allVisibleFields)
+    const validationSchema = buildValidationSchema(allVisibleFields, {
+        required: t("errors.required"),
+        number: t("errors.number"),
+    })
 
     type FormValues = Record<string, unknown>
 
@@ -97,10 +103,9 @@ const PostForm = () => {
 
             const options: EnumOption[] = rawOptions.map((choice) => ({
                 id: choice.id,
-                label:
-                    isArabic && "label_l1" in choice && choice.label_l1
-                        ? choice.label_l1
-                        : choice.label,
+                label: isArabic
+                    ? choice.label_l1 || choice.seoSlug?.ar || choice.label
+                    : choice.label,
             }))
 
             if (
@@ -138,10 +143,15 @@ const PostForm = () => {
                 const selectedValue =
                     currentArray.length > 0 ? currentArray[0] : null
 
+                const placeholder = t(
+                    `fields.${field.attribute}.placeholder`,
+                    { defaultValue: field.name },
+                )
+
                 return (
                     <EnumSelectField
                         options={options}
-                        placeholder={field.name}
+                        placeholder={placeholder}
                         value={selectedValue}
                         onChange={(val) => {
                             const nextArray =
@@ -175,10 +185,15 @@ const PostForm = () => {
 
         const inputType = field.valueType === "string" ? "text" : "number"
 
+        const placeholder = t(
+            `fields.${field.attribute}.placeholder`,
+            { defaultValue: field.name },
+        )
+
         return (
             <TextOrNumberField
                 type={inputType}
-                placeholder={field.name}
+                placeholder={placeholder}
                 value={rhfField.value as string | number | undefined}
                 onChange={rhfField.onChange}
                 hasError={hasError}
@@ -226,7 +241,12 @@ const PostForm = () => {
                                                             : "text-gray-800"
                                                             } ${labelAlign}`}
                                                     >
-                                                        <span>{field.name}</span>
+                                                        <span>
+                                                            {t(
+                                                                `fields.${field.attribute}.label`,
+                                                                { defaultValue: field.name },
+                                                            )}
+                                                        </span>
                                                         {field.isMandatory && (
                                                             <span className="ml-1 text-red-500">
                                                                 *
@@ -262,7 +282,7 @@ const PostForm = () => {
                     onClick={handleSubmit(onSubmit)}
                     className="rounded-lg bg-[#002f34] px-6 py-2 text-sm font-semibold text-white hover:bg-[#003f45]"
                 >
-                    Submit
+                    {t("actions.submit")}
                 </button>
             </div>
         </Section>

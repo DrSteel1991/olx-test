@@ -1,0 +1,69 @@
+{
+  "actions": {
+    "submit": "انشر الان"
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "number": "يجب أن يكون رقماً"
+  },
+  "fields": {
+    "brand": {
+      "label": "الماركة",
+      "placeholder": "اختر الماركة"
+    },
+    "model": {
+      "label": "الموديل",
+      "placeholder": "أدخل الموديل"
+    },
+    "storage": {
+      "label": "السعة التخزينية",
+      "placeholder": "اختر السعة التخزينية"
+    },
+    "color": {
+      "label": "اللون",
+      "placeholder": "اختر اللون"
+    },
+    "property_type": {
+      "label": "نوع العقار",
+      "placeholder": "اختر نوع العقار"
+    },
+    "rooms": {
+      "label": "غرف النوم",
+      "placeholder": "اختر عدد غرف النوم"
+    },
+    "bathrooms": {
+      "label": "الحمامات",
+      "placeholder": "اختر عدد الحمامات"
+    },
+    "ft": {
+      "label": "المساحة (م²)",
+      "placeholder": "أدخل المساحة [م²]"
+    },
+    "furnished": {
+      "label": "مفروشة",
+      "placeholder": "اختر حالة التأثيث"
+    },
+    "condition": {
+      "label": "الحالة",
+      "placeholder": "اختر الحالة"
+    },
+    "floor_level": {
+      "label": "الطابق",
+      "placeholder": "اختر الطابق"
+    },
+    "features": {
+      "label": "المزايا",
+      "placeholder": "اختر المزايا"
+    },
+    "property_age": {
+      "label": "عمر العقار",
+      "placeholder": "اختر عمر العقار"
+    },
+    "reference_id": {
+      "label": "رقم المرجع",
+      "placeholder": "أدخل رقم المرجع"
+    }
+  }
+}
+
+

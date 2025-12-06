@@ -1,0 +1,69 @@
+{
+  "actions": {
+    "submit": "Submit"
+  },
+  "errors": {
+    "required": "This field is required",
+    "number": "Must be a number"
+  },
+  "fields": {
+    "brand": {
+      "label": "Brand",
+      "placeholder": "Select brand"
+    },
+    "model": {
+      "label": "Model",
+      "placeholder": "Enter model"
+    },
+    "storage": {
+      "label": "Storage",
+      "placeholder": "Select storage"
+    },
+    "color": {
+      "label": "Color",
+      "placeholder": "Select color"
+    },
+    "property_type": {
+      "label": "Property Type",
+      "placeholder": "Select property type"
+    },
+    "rooms": {
+      "label": "Bedrooms",
+      "placeholder": "Select bedrooms"
+    },
+    "bathrooms": {
+      "label": "Bathrooms",
+      "placeholder": "Select bathrooms"
+    },
+    "ft": {
+      "label": "Size (m²)",
+      "placeholder": "Enter size [m²]"
+    },
+    "furnished": {
+      "label": "Furnished",
+      "placeholder": "Select furnished"
+    },
+    "condition": {
+      "label": "Condition",
+      "placeholder": "Select condition"
+    },
+    "floor_level": {
+      "label": "Floor",
+      "placeholder": "Select floor"
+    },
+    "features": {
+      "label": "Amenities",
+      "placeholder": "Select amenities"
+    },
+    "property_age": {
+      "label": "Property Age",
+      "placeholder": "Select property age"
+    },
+    "reference_id": {
+      "label": "Reference Id",
+      "placeholder": "Enter reference id"
+    }
+  }
+}
+
+
