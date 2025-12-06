@@ -42,19 +42,6 @@ const categoriesResponse = [
   },
 ]
 
-const categoryFieldsResponse = {
-  '10': {
-    flatFields: [],
-    childrenFields: [],
-    parentFieldLookup: {},
-  },
-  common_category_fields: {
-    flatFields: [],
-    childrenFields: [],
-    parentFieldLookup: {},
-  },
-}
-
 test('user can create a post from home through to post form submit', async ({
   page,
 }) => {
