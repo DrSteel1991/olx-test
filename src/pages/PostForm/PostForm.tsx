@@ -5,6 +5,7 @@ import {
 } from "@/queries/CategoryFields/useGetCategoryFieldsQuery"
 import { useQueryClient } from "@tanstack/react-query"
 import Section from "@/ui/Section"
+import Header from "@/modules/Header/Header"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -94,31 +95,34 @@ const PostForm = () => {
     const handleFormSubmit = handleSubmit(onSubmit)
 
     return (
-        <Section>
-            <PostFormBody
-                parentName={parentName}
-                leafName={leafName}
-                parentImageSrc={parentImageSrc}
-                steps={steps}
-                control={control}
-                formState={formState}
-                labelAlign={labelAlign}
-                isRtl={isRtl}
-                handleSubmit={handleSubmit}
-                onSubmit={onSubmit}
-                handleShowCategoryModal={handleShowCategoryModal}
-            />
+        <>
+            <Header />
+            <Section>
+                <PostFormBody
+                    parentName={parentName}
+                    leafName={leafName}
+                    parentImageSrc={parentImageSrc}
+                    steps={steps}
+                    control={control}
+                    formState={formState}
+                    labelAlign={labelAlign}
+                    isRtl={isRtl}
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
+                    handleShowCategoryModal={handleShowCategoryModal}
+                />
 
-            <PostFormFooter onSubmit={handleFormSubmit} />
+                <PostFormFooter onSubmit={handleFormSubmit} />
 
-            <CategorySelectDialog
-                open={isCategoryModalOpen}
-                onClose={() => setIsCategoryModalOpen(false)}
-                onCategorySelected={handleCategorySelected}
-                categories={categories}
-                isArabic={isRtl}
-            />
-        </Section>
+                <CategorySelectDialog
+                    open={isCategoryModalOpen}
+                    onClose={() => setIsCategoryModalOpen(false)}
+                    onCategorySelected={handleCategorySelected}
+                    categories={categories}
+                    isArabic={isRtl}
+                />
+            </Section>
+        </>
     )
 }
 

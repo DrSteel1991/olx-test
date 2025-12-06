@@ -2,7 +2,7 @@ import Section from "@/ui/Section"
 import { useGetCategoriesQuery } from "@/queries/Categories/useGetCategoriesQuery"
 import { useTranslation } from "react-i18next"
 import { initPostI18n } from "./i18n"
-import PostHeader from "./PostHeader"
+import Header from "@/modules/Header/Header"
 import { useState } from "react"
 import PostCardView from "./PostCardView"
 import PostListView from "./PostListView/PostListView"
@@ -44,7 +44,7 @@ const Post = () => {
 
     return (
         <>
-            <PostHeader />
+            <Header />
             <Section>
                 <div className="flex flex-col gap-5 mb-3 mt-6">
                     <span className="text-3xl font-bold text-gray-900">

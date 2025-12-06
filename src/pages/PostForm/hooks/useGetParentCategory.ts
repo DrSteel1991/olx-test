@@ -1,5 +1,5 @@
 import type { useGetCategoriesQueryResponseSuccess } from "@/queries/Categories/types"
-import { getCategoryPathById } from "../functions/getCategoryPathById"
+import { getCategoryPathById } from "@/pages/PostForm/functions/getCategoryPathById"
 
 interface Result {
     parentCategory?: useGetCategoriesQueryResponseSuccess
