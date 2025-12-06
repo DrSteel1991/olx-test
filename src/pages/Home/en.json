@@ -2,6 +2,11 @@
   "categories": {
     "title": "All categories",
     "sell": "Sell"
+  },
+  "header": {
+    "location": "Lebanon",
+    "language": "العربية",
+    "searchPlaceholder": "Find Cars, Mobile Phones and more..."
   }
 }
 

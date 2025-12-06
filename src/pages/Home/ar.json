@@ -2,6 +2,11 @@
   "categories": {
     "title": "كل الفئات",
     "sell": "بيع"
+  },
+  "header": {
+    "location": "لبنان",
+    "language": "English",
+    "searchPlaceholder": "ابحث عن سيارات، هواتف محمولة والمزيد..."
   }
 }
 

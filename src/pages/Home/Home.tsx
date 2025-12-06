@@ -1,4 +1,4 @@
-import HomeHeader from "./HomeHeader"
+import HomeHeader from "./HomeHeader/HomeHeader"
 import Separator from "@/ui/Separator"
 import HomeCategories from "./HomeCategories/HomeCategories"
 import HomeCategoriesSkeleton from "./HomeCategories/HomeCategoriesSkeleton"
