@@ -1,7 +1,4 @@
-import type { useGetCategoryFieldsQueryResponseSuccess } from "@/queries/CategoryFields/types"
-import type { useGetCategoriesQueryResponseSuccess } from "@/queries/Categories/types"
 import {
-    CATEGORY_FIELDS_QUERY_KEY,
     CURRENT_CATEGORY_EXTERNAL_ID_KEY,
     CURRENT_CATEGORY_ID_KEY,
     usePrefetchCategoryFields,
@@ -13,62 +10,25 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { buildValidationSchema } from "./functions/buildValidationSchema"
+import { buildValidationSchema, type FormValues } from "./functions/buildValidationSchema"
 import { initPostFormI18n } from "./i18n"
 import { useGetCategoriesQuery } from "@/queries/Categories/useGetCategoriesQuery"
 import CategorySelectDialog from "./PostFormCategorySelectDialog"
-import PostFormCategoryHeader from "./PostFormCategoryHeader"
-import { renderFieldInput } from "./functions/renderFieldInput"
-import PostFormFieldRow from "./PostFormFieldRow"
+import PostFormBody from "./PostFormBody"
+import PostFormFooter from "./PostFormFooter"
 import { useGetSteps } from "./hooks/useGetSteps"
+import { getCategoryFields } from "./functions/getCategoryFields"
+import { useGetParentCategory } from "./hooks/useGetParentCategory"
 
 initPostFormI18n()
-
-const flattenCategories = (
-    categories: useGetCategoriesQueryResponseSuccess[] | undefined,
-): useGetCategoriesQueryResponseSuccess[] => {
-    if (!categories) return []
-    const result: useGetCategoriesQueryResponseSuccess[] = []
-    const stack = [...categories]
-
-    while (stack.length) {
-        const cat = stack.pop()!
-        result.push(cat)
-        if (cat.children && cat.children.length) {
-            stack.push(...cat.children)
-        }
-    }
-
-    return result
-}
-
-const getCategoryPathById = (
-    categories: useGetCategoriesQueryResponseSuccess[] | undefined,
-    id: number | undefined,
-): useGetCategoriesQueryResponseSuccess[] => {
-    if (!categories || id === undefined) return []
-    const flat = flattenCategories(categories)
-    const byId = new Map(flat.map((cat) => [cat.id, cat]))
-
-    const path: useGetCategoriesQueryResponseSuccess[] = []
-    let current = byId.get(id) || null
-
-    while (current) {
-        path.push(current)
-        if (current.parentID === null) break
-        current = byId.get(current.parentID) || null
-    }
-
-    return path.reverse()
-}
 
 const PostForm = () => {
     const { i18n, t } = useTranslation("postForm")
     const queryClient = useQueryClient()
-    const navigate = useNavigate()
     const { data: categories } = useGetCategoriesQuery()
-    const { prefetchCategoryFields } = usePrefetchCategoryFields()
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
+    const navigate = useNavigate()
+    const { prefetchCategoryFields } = usePrefetchCategoryFields()
     const currentCategoryExternalID = queryClient.getQueryData<string>([
         CURRENT_CATEGORY_EXTERNAL_ID_KEY,
     ])
@@ -83,13 +43,10 @@ const PostForm = () => {
         }
     }, [currentCategoryExternalID, currentCategoryId, navigate])
 
-    let categoryFields: useGetCategoryFieldsQueryResponseSuccess | undefined
-    if (currentCategoryExternalID) {
-        categoryFields = queryClient.getQueryData<useGetCategoryFieldsQueryResponseSuccess>([
-            CATEGORY_FIELDS_QUERY_KEY,
-            currentCategoryExternalID,
-        ])
-    }
+    const categoryFields = getCategoryFields(
+        queryClient,
+        currentCategoryExternalID,
+    )
 
     const { steps, allVisibleFields } = useGetSteps(
         categoryFields,
@@ -100,8 +57,6 @@ const PostForm = () => {
         required: t("errors.required"),
         number: t("errors.number"),
     })
-
-    type FormValues = Record<string, unknown>
 
     const form = useForm<FormValues>({
         resolver: yupResolver(validationSchema as never),
@@ -123,80 +78,38 @@ const PostForm = () => {
         navigate("/post-form", { replace: true })
     }
 
+    const handleShowCategoryModal = () => {
+        setIsCategoryModalOpen(true)
+    }
+
     const isRtl = i18n.language === "ar"
     const labelAlign = isRtl ? "text-right" : "text-left"
 
-    const categoryPath = getCategoryPathById(categories, currentCategoryId)
-    const parentCategory = categoryPath[0]
-    const leafCategory =
-        categoryPath[categoryPath.length - 1] || parentCategory
+    const {
+        parentName,
+        leafName,
+        parentImageSrc,
+    } = useGetParentCategory(categories, currentCategoryId, isRtl)
 
-    const parentName = parentCategory
-        ? isRtl
-            ? parentCategory.name_l1
-            : parentCategory.name
-        : ""
-
-    const leafName = leafCategory
-        ? isRtl
-            ? leafCategory.name_l1
-            : leafCategory.name
-        : ""
-
-    const parentImageSrc = parentCategory
-        ? `/assets/images/categories/${parentCategory.slug}.png`
-        : undefined
+    const handleFormSubmit = handleSubmit(onSubmit)
 
     return (
         <Section>
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="rounded-xl border border-gray-200 bg-white px-8 py-6"
-                noValidate
-            >
-                <PostFormCategoryHeader
-                    parentName={parentName}
-                    leafName={leafName}
-                    parentImageSrc={parentImageSrc}
-                    onChangeClick={() => setIsCategoryModalOpen(true)}
-                />
+            <PostFormBody
+                parentName={parentName}
+                leafName={leafName}
+                parentImageSrc={parentImageSrc}
+                steps={steps}
+                control={control}
+                formState={formState}
+                labelAlign={labelAlign}
+                isRtl={isRtl}
+                handleSubmit={handleSubmit}
+                onSubmit={onSubmit}
+                handleShowCategoryModal={handleShowCategoryModal}
+            />
 
-                <div className="flex flex-col gap-6">
-                    {Object.entries(steps)
-                        .sort(
-                            ([stepA], [stepB]) =>
-                                Number(stepA) - Number(stepB),
-                        )
-                        .map(([stepIndex, fields]) => (
-                            <div
-                                key={stepIndex}
-                                className="flex flex-col gap-4"
-                            >
-                                {fields.map((field) => (
-                                    <PostFormFieldRow
-                                        key={field.id}
-                                        field={field}
-                                        control={control}
-                                        formState={formState}
-                                        labelAlign={labelAlign}
-                                        isArabic={isRtl}
-                                        renderFieldInput={renderFieldInput}
-                                    />
-                                ))}
-                            </div>
-                        ))}
-                </div>
-            </form>
-
-            <div className="mt-6 flex justify-end">
-                <button
-                    type="button"
-                    onClick={handleSubmit(onSubmit)}
-                    className="rounded-lg bg-[#002f34] px-6 py-2 text-sm font-semibold text-white hover:bg-[#003f45]"
-                >
-                    {t("actions.submit")}
-                </button>
-            </div>
+            <PostFormFooter onSubmit={handleFormSubmit} />
 
             <CategorySelectDialog
                 open={isCategoryModalOpen}

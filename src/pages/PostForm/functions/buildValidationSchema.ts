@@ -8,6 +8,8 @@ interface Messages {
     number: string
 }
 
+export type FormValues = Record<string, unknown>
+
 export const buildValidationSchema = (
     fields: FieldDefinition[],
     messages: Messages,

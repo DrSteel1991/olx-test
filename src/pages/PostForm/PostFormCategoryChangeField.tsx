@@ -7,7 +7,7 @@ interface Props {
     onChangeClick: () => void
 }
 
-const PostFormCategoryHeader = ({
+const PostFormCategorychangeField = ({
     parentName,
     leafName,
     parentImageSrc,
@@ -48,6 +48,6 @@ const PostFormCategoryHeader = ({
     )
 }
 
-export default PostFormCategoryHeader
+export default PostFormCategorychangeField
 
 
