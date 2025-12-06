@@ -2,6 +2,7 @@
   "actions": {
     "submit": "Submit"
   },
+  "title": "Sell your ad",
   "errors": {
     "required": "This field is required",
     "number": "Must be a number"

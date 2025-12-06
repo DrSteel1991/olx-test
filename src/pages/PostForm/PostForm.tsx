@@ -98,6 +98,12 @@ const PostForm = () => {
         <>
             <Header />
             <Section>
+                <div className="flex flex-col gap-5 mb-3 mt-6">
+                    <span className="text-3xl font-bold text-gray-900">
+                        {t("title")}
+                    </span>
+                </div>
+
                 <PostFormBody
                     parentName={parentName}
                     leafName={leafName}
