@@ -14,6 +14,10 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
+  // Disable Suspense so components render immediately (helps in tests too)
+  react: {
+    useSuspense: false,
+  },
 })
 
 i18n.on("languageChanged", (lng) => {
