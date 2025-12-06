@@ -29,7 +29,6 @@ export const splitIntoSteps = (
 
     const steps: Record<number, CategoryFieldConfig["flatFields"]> = {}
 
-    // First, place all non‑price fields in their original groupIndex
     for (const field of regularFields) {
         if (field.groupIndex === null) continue
         const groupIndex = field.groupIndex
@@ -39,7 +38,6 @@ export const splitIntoSteps = (
         steps[groupIndex].push(field)
     }
 
-    // Then, append a dedicated "price" step at the end, preserving displayPriority
     if (priceFields.length > 0) {
         const existingStepIndexes = Object.keys(steps).map(Number)
         const priceStepIndex =

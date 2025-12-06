@@ -44,6 +44,10 @@ const PostFormFieldRow = ({
                     !!fieldState.error &&
                     (fieldState.isTouched || formState.isSubmitted)
 
+                const defaultLabel = isArabic
+                    ? field.seoTitle?.ar || field.name
+                    : field.seoTitle?.en || field.name
+
                 return (
                     <div className="flex items-start justify-between gap-6">
                         <div
@@ -51,7 +55,9 @@ const PostFormFieldRow = ({
                                 } ${labelAlign}`}
                         >
                             <span>
-                                {field.name}
+                                {t(`fields.${field.attribute}.label`, {
+                                    defaultValue: defaultLabel,
+                                })}
                             </span>
                             {field.isMandatory && (
                                 <span className="ml-1 text-red-500">*</span>

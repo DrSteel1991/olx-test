@@ -7,12 +7,44 @@
     "required": "هذا الحقل مطلوب",
     "number": "يجب أن يكون رقماً"
   },
+  "contactMethod": {
+    "name": {
+      "label": "الاسم",
+      "placeholder": "أدخل اسمك"
+    },
+    "mobile": {
+      "label": "رقم الهاتف المحمول",
+      "placeholder": "أدخل رقم الهاتف المحمول"
+    },
+    "label": "طريقة التواصل",
+    "options": {
+      "phone": "رقم الهاتف",
+      "chat": "دردشة OLX",
+      "both": "كلاهما"
+    }
+  },
   "category": {
     "label": "الفئة",
     "change": "تغيير",
     "modalTitle": "اختر الفئة"
   },
   "fields": {
+    "price": {
+      "label": "السعر",
+      "placeholder": "أدخل السعر"
+    },
+    "secondary_price": {
+      "label": "السعر الثانوي",
+      "placeholder": "أدخل السعر الثانوي"
+    },
+    "price_type": {
+      "label": "نوع السعر",
+      "placeholder": "اختر نوع السعر"
+    },
+    "payment_option": {
+      "label": "طريقة الدفع",
+      "placeholder": "اختر طريقة الدفع"
+    },
     "brand": {
       "label": "الماركة",
       "placeholder": "اختر الماركة"

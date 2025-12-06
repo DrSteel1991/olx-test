@@ -21,6 +21,9 @@ interface Params {
 
 export const renderFieldInput = (params: Params) => {
     const { field, rhfField, hasError, isArabic, t } = params
+    const defaultLabel = isArabic
+        ? field.seoTitle?.ar || field.name
+        : field.seoTitle?.en || field.name
     if (field.valueType === "enum" || field.valueType === "enum_multiple") {
         const enumField = field as Extract<
             FieldDefinition,
@@ -76,10 +79,9 @@ export const renderFieldInput = (params: Params) => {
             const selectedValue =
                 currentArray.length > 0 ? currentArray[0] : null
 
-            const placeholder = t(
-                `fields.${field.attribute}.placeholder`,
-                { defaultValue: field.name },
-            )
+            const placeholder = t(`fields.${field.attribute}.placeholder`, {
+                defaultValue: defaultLabel,
+            })
 
             return (
                 <EnumSelectField
@@ -118,10 +120,9 @@ export const renderFieldInput = (params: Params) => {
 
     const inputType = field.valueType === "string" ? "text" : "number"
 
-    const placeholder = t(
-        `fields.${field.attribute}.placeholder`,
-        { defaultValue: field.name },
-    )
+    const placeholder = t(`fields.${field.attribute}.placeholder`, {
+        defaultValue: defaultLabel,
+    })
 
     return (
         <TextOrNumberField

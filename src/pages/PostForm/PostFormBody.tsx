@@ -1,6 +1,7 @@
 import type { Control, FormState, UseFormHandleSubmit } from "react-hook-form"
 import PostFormCategorychangeField from "./PostFormCategoryChangeField"
 import PostFormFieldRow from "./PostFormFieldRow"
+import PostFormContactSection from "./PostFormContactSection"
 import type { FieldDefinition } from "./functions/buildValidationSchema"
 import { renderFieldInput } from "./functions/renderFieldInput"
 
@@ -71,6 +72,12 @@ const PostFormBody = ({
                         </div>
                     ))}
             </div>
+
+            <PostFormContactSection
+                control={control}
+                formState={formState}
+                labelAlign={labelAlign}
+            />
         </form>
     )
 }

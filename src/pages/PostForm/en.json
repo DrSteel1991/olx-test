@@ -7,12 +7,44 @@
     "required": "This field is required",
     "number": "Must be a number"
   },
+  "contactMethod": {
+    "name": {
+      "label": "Name",
+      "placeholder": "Enter your name"
+    },
+    "mobile": {
+      "label": "Mobile Phone Number",
+      "placeholder": "Enter mobile phone number"
+    },
+    "label": "Contact Method",
+    "options": {
+      "phone": "Phone Number",
+      "chat": "OLX Chat",
+      "both": "Both"
+    }
+  },
   "category": {
     "label": "Category",
     "change": "Change",
     "modalTitle": "Choose a category"
   },
   "fields": {
+    "price": {
+      "label": "Price",
+      "placeholder": "Enter price"
+    },
+    "secondary_price": {
+      "label": "Secondary price",
+      "placeholder": "Enter secondary price"
+    },
+    "price_type": {
+      "label": "Price Type",
+      "placeholder": "Select price type"
+    },
+    "payment_option": {
+      "label": "Payment method",
+      "placeholder": "Select payment method"
+    },
     "brand": {
       "label": "Brand",
       "placeholder": "Select brand"

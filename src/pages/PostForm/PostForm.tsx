@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { buildValidationSchema, type FormValues } from "./functions/buildValidationSchema"
+import * as yup from "yup"
 import { initPostFormI18n } from "./i18n"
 import { useGetCategoriesQuery } from "@/queries/Categories/useGetCategoriesQuery"
 import CategorySelectDialog from "./PostFormCategorySelectDialog"
@@ -54,9 +55,19 @@ const PostForm = () => {
         currentCategoryId,
     )
 
-    const validationSchema = buildValidationSchema(allVisibleFields, {
+    const baseValidationSchema = buildValidationSchema(allVisibleFields, {
         required: t("errors.required"),
         number: t("errors.number"),
+    })
+
+    const validationSchema = baseValidationSchema.shape({
+        contact_name: yup
+            .string()
+            .required(t("errors.required")),
+        contact_mobile: yup
+            .string()
+            .required(t("errors.required")),
+        contact_method: yup.string().nullable(),
     })
 
     const form = useForm<FormValues>({
