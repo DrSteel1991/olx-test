@@ -10,7 +10,7 @@ interface Props {
 
 const HomeAdCard = ({ ad }: Props) => {
     return (
-        <div className="flex h-full flex-col overflow-hidden border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+        <div className="mx-2 sm:mx-0 flex h-full flex-col overflow-hidden border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
             <div className="aspect-4/3 w-full overflow-hidden">
                 <img
                     className="h-full w-full object-cover"

@@ -13,22 +13,34 @@ const HomeCategories = ({ categories }: Props) => {
 
     return (
         <Section>
-            <div className="mb-10">
-                <span className="text-2xl font-bold">
-                    {t("categories.title")}
-                </span>
-            </div>
-            <div className="mb-16 grid grid-cols-7 gap-x-26 gap-y-[1.6rem]">
-                {categories?.map((category) => {
-                    const isArabic = i18n.language === "ar"
-                    const displayName = isArabic
-                        ? category.name_l1
-                        : category.name
+            <div className="px-4 sm:px-0">
+                <div className="mb-8 sm:mb-10">
+                    <span className="text-xl font-bold sm:text-2xl">
+                        {t("categories.title")}
+                    </span>
+                </div>
+                <div
+                    className="mb-16 grid grid-cols-2 gap-x-4 gap-y-6
+                               sm:grid-cols-3 sm:gap-x-6
+                               md:grid-cols-4
+                               lg:grid-cols-6 lg:gap-x-10
+                               xl:grid-cols-7 xl:gap-x-26"
+                >
+                    {categories?.map((category) => {
+                        const isArabic = i18n.language === "ar"
+                        const displayName = isArabic
+                            ? category.name_l1
+                            : category.name
 
-                    return (
-                        <HomeCategory key={category.id} slug={category.slug} displayName={displayName} />
-                    )
-                })}
+                        return (
+                            <HomeCategory
+                                key={category.id}
+                                slug={category.slug}
+                                displayName={displayName}
+                            />
+                        )
+                    })}
+                </div>
             </div>
         </Section>
     )
