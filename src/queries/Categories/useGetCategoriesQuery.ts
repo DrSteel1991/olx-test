@@ -7,6 +7,8 @@ export const useGetCategoriesQuery = () => {
         useQuery<useGetCategoriesQueryResponseSuccess[]>({
             queryKey: ["categories"],
             queryFn: () => getCategories(),
+            staleTime: 1000 * 60 * 60,
+            refetchOnWindowFocus: false,
         });
 
     return { data, isLoading, isFetching, error };
