@@ -18,6 +18,7 @@ import { useGetCategoriesQuery } from "@/queries/Categories/useGetCategoriesQuer
 import CategorySelectDialog from "./PostFormCategorySelectDialog"
 import PostFormBody from "./PostFormBody"
 import PostFormFooter from "./PostFormFooter"
+import PostFormSkeleton from "./PostFormSkeleton"
 import { useGetSteps } from "./hooks/useGetSteps"
 import { getCategoryFields } from "./functions/getCategoryFields"
 import { useGetParentCategory } from "./hooks/useGetParentCategory"
@@ -105,30 +106,39 @@ const PostForm = () => {
 
     const handleFormSubmit = handleSubmit(onSubmit)
 
+    const isFormLoading =
+        !!currentCategoryExternalID && !categoryFields
+
     return (
         <>
             <Header />
             <Section>
-                <div className="flex flex-col gap-5 mb-3 mt-6">
+                <div className="mb-3 mt-6 flex flex-col gap-5">
                     <span className="text-3xl font-bold text-gray-900">
                         {t("title")}
                     </span>
                 </div>
 
-                <PostFormBody
-                    parentName={parentName}
-                    leafName={leafName}
-                    parentImageSrc={parentImageSrc}
-                    steps={steps}
-                    control={control}
-                    labelAlign={labelAlign}
-                    isRtl={isRtl}
-                    handleSubmit={handleSubmit}
-                    onSubmit={onSubmit}
-                    handleShowCategoryModal={handleShowCategoryModal}
-                />
+                {isFormLoading ? (
+                    <PostFormSkeleton />
+                ) : (
+                    <>
+                        <PostFormBody
+                            parentName={parentName}
+                            leafName={leafName}
+                            parentImageSrc={parentImageSrc}
+                            steps={steps}
+                            control={control}
+                            labelAlign={labelAlign}
+                            isRtl={isRtl}
+                            handleSubmit={handleSubmit}
+                            onSubmit={onSubmit}
+                            handleShowCategoryModal={handleShowCategoryModal}
+                        />
 
-                <PostFormFooter onSubmit={handleFormSubmit} />
+                        <PostFormFooter onSubmit={handleFormSubmit} />
+                    </>
+                )}
 
                 <CategorySelectDialog
                     open={isCategoryModalOpen}

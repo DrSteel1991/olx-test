@@ -8,18 +8,20 @@ import PostCardView from "./PostCardView"
 import PostListView from "./PostListView/PostListView"
 import { useNavigate } from "react-router-dom"
 import { usePrefetchCategoryFields } from "@/queries/CategoryFields/useGetCategoryFieldsQuery"
+import PostCategoriesSkeleton from "./PostCategoriesSkeleton"
 
 initPostI18n()
 
 const Post = () => {
     const [showListView, setShowListView] = useState(false)
     const [selectedPath, setSelectedPath] = useState<number[]>([])
-    const { data: categories } = useGetCategoriesQuery()
+    const { data: categories, isLoading, isFetching } = useGetCategoriesQuery()
     const { t, i18n } = useTranslation("post")
     const navigate = useNavigate()
     const { prefetchCategoryFields } = usePrefetchCategoryFields()
 
     const isArabic = i18n.language === "ar"
+    const isLoadingCategories = isLoading || isFetching
 
     const handleShowListView = (categoryId: number) => {
         setShowListView(true)
@@ -46,7 +48,7 @@ const Post = () => {
         <>
             <Header />
             <Section>
-                <div className="flex flex-col gap-5 mb-3 mt-6">
+                <div className="mb-3 mt-6 flex flex-col gap-5">
                     <span className="text-3xl font-bold text-gray-900">
                         {t("title")}
                     </span>
@@ -55,15 +57,16 @@ const Post = () => {
                     </span>
                 </div>
             </Section>
-            {!showListView && (
+
+            {isLoadingCategories ? (
+                <PostCategoriesSkeleton />
+            ) : !showListView ? (
                 <PostCardView
                     categories={categories || []}
                     isArabic={isArabic}
                     handleShowListView={handleShowListView}
                 />
-            )}
-
-            {showListView && (
+            ) : (
                 <PostListView
                     categories={categories || []}
                     isArabic={isArabic}

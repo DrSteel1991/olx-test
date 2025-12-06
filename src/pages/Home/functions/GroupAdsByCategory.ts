@@ -56,3 +56,12 @@ export const groupAdsByCategory = (
     return groupedAds
 }
 
+export const groupAdsByCategoryAsync = (
+    ads: HomeAd[],
+    categories: useGetCategoriesQueryResponseSuccess[] | undefined,
+    language: string,
+): Promise<Record<string, HomeAd[]>> => {
+    // Wrap the synchronous computation in a Promise to mimic async retrieval
+    return Promise.resolve(groupAdsByCategory(ads, categories, language))
+}
+
