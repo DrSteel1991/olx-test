@@ -19,7 +19,7 @@ const flattenCategories = (
     return result
 }
 
-export const groupAdsByCategory = (
+const groupAdsByCategory = (
     ads: HomeAd[],
     categories: useGetCategoriesQueryResponseSuccess[] | undefined,
     language: string,
@@ -61,7 +61,6 @@ export const groupAdsByCategoryAsync = (
     categories: useGetCategoriesQueryResponseSuccess[] | undefined,
     language: string,
 ): Promise<Record<string, HomeAd[]>> => {
-    // Wrap the synchronous computation in a Promise to mimic async retrieval
     return Promise.resolve(groupAdsByCategory(ads, categories, language))
 }
 
