@@ -11,9 +11,16 @@ interface Props {
     placeholder: string
     value?: string | number | null
     onChange?: (value: string | number | null) => void
+    hasError?: boolean
 }
 
-const EnumSelectField = ({ options, placeholder, value, onChange }: Props) => {
+const EnumSelectField = ({
+    options,
+    placeholder,
+    value,
+    onChange,
+    hasError = false,
+}: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -39,11 +46,20 @@ const EnumSelectField = ({ options, placeholder, value, onChange }: Props) => {
     const selected = options.find((option) => option.id === value)
     const displayLabel = selected ? selected.label : placeholder
 
+    const baseClasses =
+        "flex w-full items-center rounded-lg border bg-white px-4 py-3 text-left text-sm hover:border-gray-400"
+    const normalClasses =
+        "border-gray-300 text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#23e5db]"
+    const errorClasses =
+        "border-red-500 text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+
     return (
         <div ref={containerRef} className="relative">
             <button
                 type="button"
-                className="flex w-full items-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-left text-sm text-gray-500 hover:border-gray-400"
+                className={
+                    baseClasses + " " + (hasError ? errorClasses : normalClasses)
+                }
                 onClick={() => setIsOpen((prev) => !prev)}
             >
                 <Icon

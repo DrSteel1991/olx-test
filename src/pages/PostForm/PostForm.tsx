@@ -69,19 +69,16 @@ const PostForm = () => {
         mode: "onBlur",
     })
 
-    const { control, handleSubmit } = form
+    const { control, handleSubmit, formState } = form
 
     const onSubmit = (data: FormValues) => {
         console.log("Post form submit", data)
     }
 
-    const onError = (errors: unknown) => {
-        console.log("Post form validation errors", errors)
-    }
-
     const renderFieldInput = (
         field: FieldDefinition,
         rhfField: ControllerRenderProps<Record<string, unknown>, string>,
+        hasError: boolean,
     ) => {
         if (field.valueType === "enum" || field.valueType === "enum_multiple") {
             const enumField = field as Extract<
@@ -90,9 +87,11 @@ const PostForm = () => {
             >
             const rawChoices = enumField.choices
 
-            const rawOptions = Array.isArray(rawChoices)
-                ? rawChoices
-                : Object.values(rawChoices).flat()
+            const rawOptions = !rawChoices
+                ? []
+                : Array.isArray(rawChoices)
+                    ? rawChoices
+                    : Object.values(rawChoices).flat()
 
             const isArabic = i18n.language === "ar"
 
@@ -124,6 +123,7 @@ const PostForm = () => {
                                 : []
                         }
                         onChange={rhfField.onChange}
+                        hasError={hasError}
                     />
                 )
             }
@@ -148,6 +148,7 @@ const PostForm = () => {
                                 val == null ? [] : [val as string | number]
                             rhfField.onChange(nextArray)
                         }}
+                        hasError={hasError}
                     />
                 )
             }
@@ -167,6 +168,7 @@ const PostForm = () => {
                             : []
                     }
                     onChange={rhfField.onChange}
+                    hasError={hasError}
                 />
             )
         }
@@ -179,6 +181,7 @@ const PostForm = () => {
                 placeholder={field.name}
                 value={rhfField.value as string | number | undefined}
                 onChange={rhfField.onChange}
+                hasError={hasError}
             />
         )
     }
@@ -189,7 +192,7 @@ const PostForm = () => {
     return (
         <Section>
             <form
-                onSubmit={handleSubmit(onSubmit, onError)}
+                onSubmit={handleSubmit(onSubmit)}
                 className="rounded-xl border border-gray-200 bg-white px-8 py-6"
                 noValidate
             >
@@ -205,33 +208,48 @@ const PostForm = () => {
                                 className="flex flex-col gap-4"
                             >
                                 {fields.map((field) => (
-                                    <div
+                                    <Controller
                                         key={field.id}
-                                        className="flex items-center justify-between gap-6"
-                                    >
-                                        <div
-                                            className={`w-40 shrink-0 text-sm font-semibold text-gray-800 ${labelAlign}`}
-                                        >
-                                            <span>{field.name}</span>
-                                            {field.isMandatory && (
-                                                <span className="ml-1 text-red-500">
-                                                    *
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="flex-1">
-                                            <Controller
-                                                control={control}
-                                                name={field.attribute}
-                                                render={({ field: rhfField }) =>
-                                                    renderFieldInput(
-                                                        field,
-                                                        rhfField,
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                    </div>
+                                        control={control}
+                                        name={field.attribute}
+                                        render={({ field: rhfField, fieldState }) => {
+                                            const showError =
+                                                !!fieldState.error &&
+                                                (fieldState.isTouched ||
+                                                    formState.isSubmitted)
+
+                                            return (
+                                                <div className="flex items-start justify-between gap-6">
+                                                    <div
+                                                        className={`w-40 shrink-0 text-sm font-semibold ${showError
+                                                            ? "text-red-500"
+                                                            : "text-gray-800"
+                                                            } ${labelAlign}`}
+                                                    >
+                                                        <span>{field.name}</span>
+                                                        {field.isMandatory && (
+                                                            <span className="ml-1 text-red-500">
+                                                                *
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        {renderFieldInput(
+                                                            field,
+                                                            rhfField,
+                                                            showError,
+                                                        )}
+                                                        {showError &&
+                                                            fieldState.error?.message && (
+                                                                <p className="mt-1 text-xs text-red-500">
+                                                                    {fieldState.error.message}
+                                                                </p>
+                                                            )}
+                                                    </div>
+                                                </div>
+                                            )
+                                        }}
+                                    />
                                 ))}
                             </div>
                         ))}
@@ -241,7 +259,7 @@ const PostForm = () => {
             <div className="mt-6 flex justify-end">
                 <button
                     type="button"
-                    onClick={handleSubmit(onSubmit, onError)}
+                    onClick={handleSubmit(onSubmit)}
                     className="rounded-lg bg-[#002f34] px-6 py-2 text-sm font-semibold text-white hover:bg-[#003f45]"
                 >
                     Submit

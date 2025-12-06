@@ -8,6 +8,7 @@ interface Props {
     mode?: "single" | "multiple"
     value?: Array<string | number>
     onChange?: (value: Array<string | number>) => void
+    hasError?: boolean
 }
 
 const EnumMultipleChipsField = ({
