@@ -44,7 +44,7 @@ export const renderFieldInput = (params: Params) => {
         if (
             field.valueType === "enum" &&
             field.filterType === "multiple_choice" &&
-            options.length <= 3
+            options.length <= 4
         ) {
             const chipOptions: EnumChipOption[] = options.map((option) => ({
                 id: option.id,

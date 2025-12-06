@@ -13,15 +13,24 @@ const isPriceRelated = (attribute: string) =>
 export const splitIntoSteps = (
     categoryFields: CategoryFieldConfig["flatFields"] | undefined,
 ) => {
-    const filteredCategoryFields =
+    const eligibleFields =
         categoryFields?.filter(
             (field) =>
                 field.groupIndex !== null &&
-                !field.roles.includes("exclude_from_post_an_ad") &&
-                !isPriceRelated(field.attribute),
+                !field.roles.includes("exclude_from_post_an_ad"),
         ) ?? []
+
+    const regularFields = eligibleFields.filter(
+        (field) => !isPriceRelated(field.attribute),
+    )
+    const priceFields = eligibleFields.filter((field) =>
+        isPriceRelated(field.attribute),
+    )
+
     const steps: Record<number, CategoryFieldConfig["flatFields"]> = {}
-    for (const field of filteredCategoryFields) {
+
+    // First, place all non‑price fields in their original groupIndex
+    for (const field of regularFields) {
         if (field.groupIndex === null) continue
         const groupIndex = field.groupIndex
         if (!steps[groupIndex]) {
@@ -29,8 +38,21 @@ export const splitIntoSteps = (
         }
         steps[groupIndex].push(field)
     }
-    Object.values(steps).forEach((step) =>
-        step.sort((a, b) => a.displayPriority - b.displayPriority),
-    )
+
+    // Then, append a dedicated "price" step at the end, preserving displayPriority
+    if (priceFields.length > 0) {
+        const existingStepIndexes = Object.keys(steps).map(Number)
+        const priceStepIndex =
+            existingStepIndexes.length > 0
+                ? Math.max(...existingStepIndexes) + 1
+                : 1
+
+        steps[priceStepIndex] = priceFields
+    }
+
+    Object.values(steps).forEach((step) => {
+        step.sort((a, b) => a.displayPriority - b.displayPriority)
+    })
+
     return steps
 }
