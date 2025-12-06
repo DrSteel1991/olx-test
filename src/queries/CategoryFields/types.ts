@@ -1,4 +1,4 @@
-type ValueType = "enum" | "float" | "int" | "string"
+type ValueType = "enum" | "enum_multiple" | "float" | "int" | "string"
 
 interface EnumChoice {
     value: string
@@ -41,7 +41,7 @@ interface BaseField {
 }
 
 interface EnumField extends BaseField {
-    valueType: "enum"
+    valueType: "enum" | "enum_multiple"
     choices: EnumChoice[] | Record<string, EnumChoice[]>
 }
 
