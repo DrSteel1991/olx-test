@@ -16,7 +16,6 @@ i18n.use(initReactI18next).init({
   },
 })
 
-// Keep HTML `dir` and `lang` in sync with the active language
 i18n.on("languageChanged", (lng) => {
   if (typeof document !== "undefined") {
     document.documentElement.lang = lng
@@ -28,7 +27,6 @@ i18n.on("languageChanged", (lng) => {
   }
 })
 
-// Initialize once for the default language on first load
 if (typeof document !== "undefined") {
   document.documentElement.lang = i18n.language
   document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr"
