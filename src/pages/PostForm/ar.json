@@ -23,6 +23,10 @@
       "label": "اللون",
       "placeholder": "اختر اللون"
     },
+    "ownership": {
+      "label": "الملكية",
+      "placeholder": "اختر الملكية"
+    },
     "property_type": {
       "label": "نوع العقار",
       "placeholder": "اختر نوع العقار"
