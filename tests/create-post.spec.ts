@@ -58,7 +58,8 @@ const categoryFieldsResponse = {
 test('user can create a post from home through to post form submit', async ({
   page,
 }) => {
-  // Mock categories and category fields API responses
+  // Use mocked categories so the category tree is deterministic,
+  // but let the real /categoryFields API drive the dynamic form.
   await page.route('**/api/categories', async (route) => {
     await route.fulfill({
       status: 200,
@@ -67,31 +68,17 @@ test('user can create a post from home through to post form submit', async ({
     })
   })
 
-  await page.route('**/api/categoryFields**', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(categoryFieldsResponse),
-    })
-  })
-
-  // Start from home
   await page.goto('/')
 
-  // Click Sell in the home header to go to /post
   await page.getByRole('button', { name: 'Sell' }).click()
   await expect(page).toHaveURL(/\/post$/)
 
-  // Select root category (card view)
   await page.getByRole('button', { name: /Cars/ }).click()
 
-  // Now in list view: select sub category "Sedan"
   await page.getByRole('button', { name: /Sedan/ }).click()
 
-  // We should be on the post form
   await expect(page).toHaveURL(/\/post-form$/)
 
-  // Fill required contact fields
   await page
     .getByPlaceholder('Enter your name')
     .fill('John Doe')
@@ -99,13 +86,31 @@ test('user can create a post from home through to post form submit', async ({
     .getByPlaceholder('Enter mobile phone number')
     .fill('12345678')
 
-  // Optionally choose a contact method (not required, but closer to real usage)
   await page.getByRole('button', { name: /Phone Number/ }).click()
 
-  // Submit the form
   await page.getByRole('button', { name: 'Submit' }).click()
 
-  // After submit there should be no visible "required" validation errors
+  const errorLocator = page.getByText('This field is required')
+  const errorCount = await errorLocator.count()
+
+  for (let i = 0; i < errorCount; i++) {
+    const error = errorLocator.nth(i)
+    const row = error.locator('..').locator('..')
+
+    const input = row.locator('input').first()
+    if (await input.count()) {
+      await input.fill('123')
+      continue
+    }
+
+    const button = row.getByRole('button').first()
+    if (await button.count()) {
+      await button.click()
+    }
+  }
+
+  await page.getByRole('button', { name: 'Submit' }).click()
+
   await expect(page.getByText('This field is required')).toHaveCount(0)
 })
 
