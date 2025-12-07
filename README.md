@@ -61,6 +61,8 @@ You have the apiClients and queries folder. I am using Tanstack query to manage 
 
 You have the pages, that contains the pages of the app.
 
+I could have used zustand for global state but for the sake of this exercise i didn't need it.
+
 I added unit tests for some components, of course we can do more tests but for the sake of this excerise i chose couple of components to test them using jest and react testing library. 
 I also created an e2e test using playwright, that tests the create post feature.
 
