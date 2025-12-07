@@ -43,7 +43,7 @@ const PostForm = () => {
 
     useEffect(() => {
         if (!currentCategoryExternalID || currentCategoryId === undefined) {
-            navigate("/post", { replace: true })
+            navigate("/post")
         }
     }, [currentCategoryExternalID, currentCategoryId, navigate])
 
