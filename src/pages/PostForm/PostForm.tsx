@@ -112,7 +112,7 @@ const PostForm = () => {
 
     return (
         <>
-            <Header />
+            <Header navigationUrl="/post" />
             <Section>
                 <PostFormHeader />
                 {isFormLoading ? (

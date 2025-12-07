@@ -2,7 +2,11 @@ import Icon from "@/ui/Icon/Icon"
 import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
-const Header = () => {
+interface Props {
+    navigationUrl: string
+}
+
+const Header = ({ navigationUrl }: Props) => {
     const navigate = useNavigate()
     const { i18n } = useTranslation()
     const isArabic = i18n.language === "ar"
@@ -13,8 +17,8 @@ const Header = () => {
             <div className="flex items-center gap-2">
                 <button
                     type="button"
-                    onClick={() => navigate(-1)}
-                    className="flex h-8 w-8 items-center justify-center"
+                    onClick={() => navigate(navigationUrl)}
+                    className="flex h-8 w-8 items-center justify-center cursor-pointer"
                 >
                     <Icon name={iconName} fontSize="large" />
                 </button>

@@ -46,7 +46,7 @@ const Post = () => {
 
     return (
         <>
-            <Header />
+            <Header navigationUrl="/" />
             <PostHeader />
             {isLoadingCategories ? (
                 <PostCategoriesSkeleton />
