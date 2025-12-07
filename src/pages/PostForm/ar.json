@@ -35,9 +35,9 @@
     },
     "image": {
       "label": "الصور",
-      "placeholder": "رفع الصور"
+      "placeholder": "رفع الصور",
+      "description": "للصورة الأساسية نوصي باستخدام الوضع الأفقي."
     },
-    "image.description": "للصورة الأساسية نوصي باستخدام الوضع الأفقي.",
     "secondary_price": {
       "label": "السعر الثانوي",
       "placeholder": "أدخل السعر الثانوي"

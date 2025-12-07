@@ -35,9 +35,9 @@
     },
     "image": {
       "label": "Images",
-      "placeholder": "Upload images"
+      "placeholder": "Upload images",
+      "description": "For the cover picture we recommend using the landscape mode."
     },
-    "image.description": "For the cover picture we recommend using the landscape mode.",
     "secondary_price": {
       "label": "Secondary price",
       "placeholder": "Enter secondary price"

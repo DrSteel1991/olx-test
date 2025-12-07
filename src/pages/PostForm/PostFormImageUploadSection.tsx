@@ -31,7 +31,7 @@ const PostFormImageUploadSection = ({
     return (
         <div className="mt-4 flex items-center justify-between gap-6">
             <div className="w-40 shrink-0 text-sm font-semibold text-gray-800">
-                {t("image.label", { defaultValue: "Images" })}
+                {t("fields.image.label", { defaultValue: "Images" })}
             </div>
 
             <Controller
@@ -118,7 +118,7 @@ const PostFormImageUploadSection = ({
                                     })}
                                 </div>
                                 <p className="mt-2 text-xs text-gray-500">
-                                    {t("image.description")}
+                                    {t("fields.image.description")}
                                 </p>
                             </div>
 
