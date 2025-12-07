@@ -2,6 +2,7 @@ import type { Control, UseFormHandleSubmit } from "react-hook-form"
 import PostFormCategorychangeField from "./PostFormCategoryChangeField"
 import PostFormFieldRow from "./PostFormFieldRow"
 import PostFormContactSection from "./PostFormContactSection"
+import PostFormImageUploadSection from "./PostFormImageUploadSection"
 import type { FieldDefinition } from "./functions/buildValidationSchema"
 import { renderFieldInput } from "./functions/renderFieldInput"
 
@@ -44,6 +45,8 @@ const PostFormBody = ({
                 parentImageSrc={parentImageSrc}
                 onChangeClick={handleShowCategoryModal}
             />
+
+            <PostFormImageUploadSection control={control} />
 
             <div className="flex flex-col gap-6">
                 {Object.entries(steps)

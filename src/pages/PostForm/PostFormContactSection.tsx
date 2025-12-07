@@ -55,9 +55,8 @@ const PostFormContactSection = ({ control, labelAlign }: Props) => {
                     return (
                         <div className="flex items-start justify-between gap-6">
                             <div
-                                className={`w-40 shrink-0 text-sm font-semibold ${
-                                    showError ? "text-red-500" : "text-gray-800"
-                                } ${labelAlign}`}
+                                className={`w-40 shrink-0 text-sm font-semibold ${showError ? "text-red-500" : "text-gray-800"
+                                    } ${labelAlign}`}
                             >
                                 <span>
                                     {t("contactMethod.name.label", {
@@ -104,9 +103,8 @@ const PostFormContactSection = ({ control, labelAlign }: Props) => {
                     return (
                         <div className="flex items-start justify-between gap-6">
                             <div
-                                className={`w-40 shrink-0 text-sm font-semibold ${
-                                    showError ? "text-red-500" : "text-gray-800"
-                                } ${labelAlign}`}
+                                className={`w-40 shrink-0 text-sm font-semibold ${showError ? "text-red-500" : "text-gray-800"
+                                    } ${labelAlign}`}
                             >
                                 <span>
                                     {t("contactMethod.mobile.label", {
@@ -156,15 +154,14 @@ const PostFormContactSection = ({ control, labelAlign }: Props) => {
                     const valueArray = Array.isArray(field.value)
                         ? (field.value as Array<string | number>)
                         : field.value
-                        ? [field.value as string | number]
-                        : []
+                            ? [field.value as string | number]
+                            : []
 
                     return (
                         <div className="flex items-start justify-between gap-6">
                             <div
-                                className={`w-40 shrink-0 text-sm font-semibold ${
-                                    showError ? "text-red-500" : "text-gray-800"
-                                } ${labelAlign}`}
+                                className={`w-40 shrink-0 text-sm font-semibold ${showError ? "text-red-500" : "text-gray-800"
+                                    } ${labelAlign}`}
                             >
                                 <span>
                                     {t("contactMethod.label", {
@@ -177,7 +174,13 @@ const PostFormContactSection = ({ control, labelAlign }: Props) => {
                                     options={contactMethodOptions}
                                     mode="single"
                                     value={valueArray}
-                                    onChange={field.onChange}
+                                    onChange={(next) => {
+                                        const first =
+                                            next.length > 0
+                                                ? (next[0] as string | number)
+                                                : null
+                                        field.onChange(first)
+                                    }}
                                     hasError={showError}
                                 />
                                 {showError &&
