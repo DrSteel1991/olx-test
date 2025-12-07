@@ -30,7 +30,7 @@ This will execute the Playwright tests defined under the `tests` directory.
 
 The app is deployed to Vercel and can be accessed here:
 
-`https://olx-test-5b0xmmvwg-drsteel1991s-projects.vercel.app/`
+`https://olx-test.vercel.app/`
 
 ## Description
 
