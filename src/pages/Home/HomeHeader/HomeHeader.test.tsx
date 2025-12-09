@@ -44,7 +44,7 @@ describe("HomeHeader", () => {
         expect(screen.getByText(/lebanon/i)).toBeInTheDocument()
 
         expect(
-            screen.getByPlaceholderText(/find cars, mobile phones and more/i),
+            screen.getByPlaceholderText(/find cars, mobile phones, properties and more/i),
         ).toBeInTheDocument()
 
         expect(screen.getByText(/sell/i)).toBeInTheDocument()
